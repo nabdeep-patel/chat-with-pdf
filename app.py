@@ -10,11 +10,6 @@ from langchain.prompts import PromptTemplate
 
 genai.configure(api_key=st.secrets["api"])
 
-google_api_key="AIzaSyDKXzBwN8hD0U2KU3RaH0oAeV1GDRHZpW0"
-
-
-
-
 def get_pdf_text(pdf_docs):
     text=""
     for pdf in pdf_docs:
@@ -22,8 +17,6 @@ def get_pdf_text(pdf_docs):
         for page in pdf_reader.pages:
             text+= page.extract_text()
     return  text
-
-
 
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
@@ -35,7 +28,6 @@ def get_vector_store(text_chunks):
     embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
-
 
 def get_conversational_chain():
 
@@ -75,8 +67,6 @@ def user_input(user_question):
     st.write("Reply: ", response["output_text"])
 
 
-
-
 def main():
     st.set_page_config("Chat PDF")
     st.header("Chat with PDF using Gemini💁")
@@ -95,8 +85,5 @@ def main():
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
                 st.success("Done")
-
-
-
 if __name__ == "__main__":
     main()
